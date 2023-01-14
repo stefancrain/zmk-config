@@ -1,6 +1,7 @@
 # ZMK Config
 
-This is a zmk config focused around the idea of switching branches quickly.
+This is a zmk config focused around the idea of switching branches quickly. As Pull requests take a long time to resolve, I wanted a way to test them quickly.
+
 
 ## How to use, with a local focus
 
@@ -16,7 +17,7 @@ This is a zmk config focused around the idea of switching branches quickly.
 7. Push your changes to github
 8. Download the firmware from the actions tab
 
-Alternatively, you could probably even use github's built-in editor to edit the keymap and config file after forking.
+Alternatively, you could probably even use github's built-in editor to edit the keymap and config file after forking and just avoid all of this.
 
 ## References
 
