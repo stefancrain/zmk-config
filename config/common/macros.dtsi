@@ -1,0 +1,77 @@
+/*
+ * Reducing code duplication in the definition of macros
+ */
+
+#define string(s) #s
+#define MACRO(NAME, PRESS, TAP, RELEASE, WAITMS, TAPMS) \
+    NAME: NAME { \
+        compatible = "zmk,behavior-macro"; \
+        label = string(NAME); \
+        wait-ms = <WAITMS>; \
+        tap-ms = <TAPMS>; \
+        #binding-cells = <0>; \
+        bindings = \
+            <&macro_press>, \
+            <PRESS>, \
+            <&macro_tap>, \
+            <TAP>, \
+            <&macro_release>, \
+            <RELEASE>; \
+    };
+
+// writing english
+MACRO(next_sentence, &none, &kp PERIOD &kp SPACE &sk LSHIFT, &none, 5, 10)
+
+// glyphs?
+MACRO(em_dash, &kp LEFT_ALT &kp LEFT_SHIFT, &kp MINUS, &kp LEFT_ALT &kp LSHIFT, 5, 10)
+MACRO(en_dash, &kp LEFT_ALT, &kp MINUS, &kp LEFT_ALT, 5, 10)
+MACRO(degree, &kp LEFT_ALT, &kp NUMBER_0, &kp LEFT_ALT, 5, 10)
+MACRO(ellipsis, &kp LEFT_ALT, &kp SEMICOLON, &kp LEFT_ALT, 5, 10)
+
+// chat - ms-teams emoji
+MACRO(ms_smile, &none, &kp LEFT_PARENTHESIS &kp S &kp M &kp I &kp L &kp E &kp RIGHT_PARENTHESIS, &none, 5, 10)
+MACRO(ms_thumbsup, &none, &kp LEFT_PARENTHESIS &kp T &kp H &kp U &kp M &kp B &kp S &kp U &kp P &kp RIGHT_PARENTHESIS, &none, 5, 10)
+MACRO(ms_hearteyes, &none, &kp LEFT_PARENTHESIS &kp H &kp E &kp A &kp R &kp T &kp E &kp Y &kp E &kp S &kp RIGHT_PARENTHESIS, &none, 5, 10)
+MACRO(ms_heart, &none, &kp LEFT_PARENTHESIS &kp H &kp E &kp A &kp R &kp T &kp RIGHT_PARENTHESIS, &none, 5, 10)
+MACRO(ms_pray, &none, &kp LEFT_PARENTHESIS &kp P &kp R &kp A &kp Y &kp RIGHT_PARENTHESIS, &none, 5, 10)
+
+// writing code
+MACRO(brackets, &none, &kp LEFT_BRACKET &kp RIGHT_BRACKET &kp LEFT_ARROW, &none, 5, 10)
+MACRO(brackets_quoted, &none, &kp DOUBLE_QUOTES &kp LEFT_BRACKET &kp RIGHT_BRACKET &kp DOUBLE_QUOTES &kp LEFT_ARROW &kp LEFT_ARROW, &none, 5, 10)
+MACRO(braces, &none, &kp LEFT_BRACE &kp RIGHT_BRACE &kp LEFT_ARROW, &none, 5, 10)
+MACRO(braces_quoted, &none, &kp DOUBLE_QUOTES &kp LEFT_BRACE &kp RIGHT_BRACE &kp DOUBLE_QUOTES &kp LEFT_ARROW &kp LEFT_ARROW, &none, 5, 10)
+MACRO(angles, &none, &kp LESS_THAN &kp GREATER_THAN &kp LEFT_ARROW, &none, 5, 10)
+MACRO(angles_quoted, &none, &kp DOUBLE_QUOTES &kp LESS_THAN &kp GREATER_THAN &kp DOUBLE_QUOTES &kp LEFT_ARROW &kp LEFT_ARROW, &none, 5, 10)
+MACRO(parenthesis, &none, &kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS &kp LEFT_ARROW, &none, 5, 10)
+MACRO(parenthesis_quoted, &none, &kp DOUBLE_QUOTES &kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS &kp DOUBLE_QUOTES &kp LEFT_ARROW &kp LEFT_ARROW, &none, 5, 10)
+MACRO(quote_single, &none, &kp SINGLE_QUOTE &kp SINGLE_QUOTE &kp LEFT_ARROW, &none, 5, 10)
+MACRO(quote_double, &none, &kp DOUBLE_QUOTES &kp DOUBLE_QUOTES &kp LEFT_ARROW, &none, 5, 10)
+
+// terminal
+MACRO(up, &none, &kp PERIOD &kp PERIOD &kp SLASH, &none, 5, 10)
+
+// logic
+MACRO(pipepipe, 
+    &none, 
+    &kp PIPE &kp PIPE, 
+    &none, 
+    5, 
+    10)
+MACRO(andand, &none, &kp AMPERSAND &kp AMPERSAND, &none, 5, 10)
+MACRO(newandand, &none, &kp BACKSLASH &kp RETURN &kp TAB &kp AMPERSAND &kp AMPERSAND &kp SPACE, &none, 5, 10)
+MACRO(slashslash, &none, &kp SLASH &kp SLASH, &none, 5, 10)
+
+// canned responses
+// Hello, what can I help you with?
+MACRO(hello, &none, &kp LS(H) &kp E &kp L &kp L &kp O &kp COMMA &kp SPACE &kp W &kp H &kp A &kp T &kp SPACE &kp C &kp A &kp N &kp SPACE &kp LS(I) &kp SPACE &kp H &kp E &kp L &kp P &kp SPACE &kp Y &kp O &kp U &kp SPACE &kp W &kp I &kp T &kp H &kp QUESTION, &none, 5, 10)
+// Could you send me the URL showing this failure?
+MACRO(failure, &none, &kp LS(C) &kp O &kp U &kp L &kp D &kp SPACE &kp Y &kp O &kp U &kp SPACE &kp S &kp E &kp N &kp D &kp SPACE &kp M &kp E &kp SPACE &kp T &kp H &kp E &kp SPACE &kp LS(U) &kp LS(R) &kp LS(L) &kp SPACE &kp S &kp H &kp O &kp W &kp I &kp N &kp G &kp SPACE &kp T &kp H &kp I &kp S &kp SPACE &kp F &kp A &kp I &kp L &kp U &kp R &kp E &kp QUESTION, &none, 5, 10)
+// Any further information you could provide will be very helpful.
+MACRO(info, &none, &kp LS(A) &kp N &kp Y &kp SPACE &kp F &kp U &kp R &kp T &kp H &kp E &kp R &kp SPACE &kp I &kp N &kp F &kp O &kp R &kp M &kp A &kp T &kp I &kp O &kp N &kp SPACE &kp Y &kp O &kp U &kp SPACE &kp C &kp O &kp U &kp L &kp D &kp SPACE &kp P &kp R &kp O &kp V &kp I &kp D &kp E &kp SPACE &kp W &kp I &kp L &kp L &kp SPACE &kp B &kp E &kp SPACE &kp V &kp E &kp R &kp R &kp Y &kp SPACE &kp H &kp E &kp L &kp P &kp F &kp U &kp L &kp PERIOD, &none, 5, 10)
+// Thanks for that, Im taking a look.
+MACRO(looking, &none, &kp LS(T) &kp H &kp A &kp N &kp K &kp S &kp SPACE &kp F &kp O &kp R &kp SPACE &kp T &kp H &kp A &kp T &kp COMMA &kp SPACE &kp I &kp SINGLE_QUOTE &kp M &kp SPACE &kp T &kp A &kp K &kp I &kp N &kp G &kp SPACE &kp A &kp SPACE &kp L &kp O &kp O &kp K &kp PERIOD, &none, 5, 10)
+// Please contact me if there are any problems.
+MACRO(contact_me, &none, &kp LS(P) &kp L &kp E &kp A &kp S &kp E &kp SPACE &kp C &kp O &kp N &kp T &kp A &kp C &kp T &kp SPACE &kp M &kp E &kp SPACE &kp I &kp F &kp SPACE &kp T &kp H &kp E &kp R &kp E &kp SPACE &kp A &kp R &kp E &kp SPACE &kp A &kp N &kp Y &kp SPACE &kp P &kp R &kp O &kp B &kp L &kp E &kp M &kp S &kp PERIOD, &none, 5, 10)
+// My Calendar is up to date
+MACRO(calendar, &none, &kp LS(M) &kp Y &kp SPACE &kp C &kp A &kp L &kp E &kp N &kp D &kp A &kp R &kp SPACE &kp I &kp S &kp SPACE &kp U &kp P &kp SPACE &kp T &kp O &kp SPACE &kp D &kp A &kp T &kp E, &none, 5, 10)
+

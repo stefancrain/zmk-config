@@ -1,0 +1,55 @@
+---
+version: '3'
+vars:
+  CONF: '{{.ROOT_DIR}}/config'
+  DOCS: '{{.ROOT_DIR}}/docs'
+tasks:
+  lint:
+    desc: Lint files
+    aliases: [l]
+    preconditions:
+      - command -v yamllint
+      - command -v markdownlint
+      - command -v prettier
+    cmds:
+      - yamllint -c '.github/lint/.yamllint.yaml' . || true
+      - markdownlint -c '.github/lint/.markdownlint.yaml' *.md **/*.md .github/**/*.md || true
+      - prettier --ignore-path '.github/lint/.prettierignore' --config '.github/lint/.prettierrc.yaml' --check . || true
+
+  fix:
+    desc: Fix errors
+    aliases: [f]
+    preconditions:
+      - command -v prettier
+    cmds:
+      - prettier --ignore-path '.github/lint/.prettierignore' --config '.github/lint/.prettierrc.yaml' --list-different --ignore-unknown --parser=markdown --write '*.md' '**/*.md' || true
+      - prettier --ignore-path '.github/lint/.prettierignore' --config '.github/lint/.prettierrc.yaml' --list-different --ignore-unknown --parser=yaml --write '*.y*ml' '**/*.y*ml' || true
+
+  docs:
+    desc: Generate docs
+    aliases: [g]
+    preconditions:
+      - command -v zmk-viewer
+    cmds:
+      - rm {{.DOCS}}/**/*.png || true
+      - task: zmk-viewer-crkbd
+      - task: zmk-viewer-sofle
+      - task: zmk-viewer-lily58
+
+  zmk-viewer-sofle:
+    internal: true
+    dir: '{{.DOCS}}/sofle/'
+    cmds:
+      - zmk-viewer generate -f {{.CONF}}/sofle.keymap sofle/rev1 || true
+
+  zmk-viewer-crkbd:
+    internal: true
+    dir: '{{.DOCS}}/crkbd/'
+    cmds:
+      - zmk-viewer generate -f {{.CONF}}/corne.keymap crkbd/rev1 || true
+
+  zmk-viewer-lily58:
+    internal: true
+    dir: '{{.DOCS}}/lily58/'
+    cmds:
+      - zmk-viewer generate -f {{.CONF}}/lily58.keymap lily58/rev1 || true

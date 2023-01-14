@@ -1,0 +1,11 @@
+// Activate MacOS layer by pressing raise and lower
+compatible = "zmk,conditional-layers";
+MAC_layer {
+    if-layers = <LOWER RAISE>;
+    then-layer = <MAC>;
+};
+// Activate Linux layer by pressing lower and raise
+LINUX_layer {
+    if-layers = <RAISE LOWER>;
+    then-layer = <LINUX>;
+};

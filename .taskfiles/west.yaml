@@ -1,0 +1,93 @@
+---
+version: '3'
+env:
+  DOCKER_RUN: 'docker run --rm -it
+    -w /zmk
+    -v zmk:/zmk
+    -v {{.ROOT_DIR}}/uf2:/uf2
+    -v {{.ROOT_DIR}}/config:/zmk-config
+    {{ .DOCKER_ZMK_IMAGE }}'
+
+tasks:
+  rm:uf2:
+    aliases: [rm:u]
+    desc: Remove uf2 files
+    ignore_error: true
+    cmds:
+      - find uf2/ -type f -delete
+
+  rm:docker:
+    aliases: [rm:d]
+    desc: Remove docker env
+    ignore_error: true
+    preconditions:
+      - command -v docker
+    cmds:
+      - docker ps -aq --filter ancestor='{{ .DOCKER_ZMK_IMAGE }}' | xargs -r docker container rm -f
+      - docker volume list -q --filter name='zmk' | xargs -r docker volume rm -f
+
+  init:
+    desc: Create build env
+    aliases: [i]
+    vars:
+      ZMK_FETCH: '{{default "main" .ZMK_FETCH}}'
+      ZMK_CHECKOUT: '{{default "main" .ZMK_CHECKOUT}}'
+    preconditions:
+      - command -v docker
+    deps:
+      - rm:docker
+    cmds:
+      - docker volume create zmk
+      - |
+        $DOCKER_RUN sh -c '\
+          git clone https://github.com/zmkfirmware/zmk/ /zmk;\
+          git fetch origin '{{ .ZMK_FETCH }}';\
+          git checkout '{{ .ZMK_CHECKOUT }}';\
+          west init -l app;\
+          west update'
+
+  test:
+    desc: test
+    aliases: [t]
+    preconditions:
+      - command -v docker
+    cmds:
+      - |
+        $DOCKER_RUN sh -c 'west --verbose test'
+
+  docker_build:
+    internal: true
+    preconditions:
+      - command -v docker
+    vars:
+      BOARD: '{{default "nice_nano_v2" .BOARD}}'
+      SHIELDS: '{{default "" .SHIELDS}}'
+    cmds:
+      - |
+        $DOCKER_RUN sh -c '\
+          west build\
+          --pristine\
+          --build-opt="-j 0"\
+          --board {{.BOARD}} app --\
+          -DSHIELD="{{.SHIELDS}}"\
+          -DZMK_CONFIG=/zmk-config\
+          && mv -f /zmk/build/zephyr/*.uf2 "/uf2/{{.BOARD}} {{.SHIELDS}}.uf2"'
+      # - defer:
+    cleanup: rm -rf tmpdir/
+
+  convert2task:
+    desc: Convert ZMK build.yaml to Tasks
+    aliases: [c2t]
+    preconditions:
+      - command -v yq
+    vars:
+      TEMPLATE: '{{.ROOT_DIR}}/.taskfiles/.west-build-template.yaml'
+      FILE: '{{.ROOT_DIR}}/.taskfiles/west-build.yaml'
+    cmds:
+      - cp "{{.TEMPLATE}}" "{{.FILE}}"
+      - |
+        yq -r '.include[] as $item ireduce ({}; .[$item | .shield] = ($item | .board) )' < "{{.ROOT_DIR}}/build.yaml" | while read BUILD ; do
+          BOARD="$(echo $BUILD | yq -r '.[]')"
+          SHIELDS="$(echo $BUILD | yq -r keys | sed "s#- ##g" )"
+          echo -e "      - task: :west:docker_build\n        vars: { BOARD: '${BOARD}', SHIELDS: '${SHIELDS}' }" >> "{{.FILE}}"
+        done

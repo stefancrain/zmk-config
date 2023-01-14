@@ -1,0 +1,32 @@
+---
+version: '3'
+
+includes:
+  dev:
+    taskfile: .taskfiles/dev.yaml
+  west:
+    taskfile: .taskfiles/west.yaml
+  west:build:
+    taskfile: .taskfiles/west-build.yaml
+    optional: true
+
+env:
+  # values for docker
+  DOCKER_DEFAULT_PLATFORM: linux/{{ARCH}} # set the platform, M1 issues
+  DOCKER_ZMK_IMAGE: zmkfirmware/zmk-build-arm:3.2 # multi-arch image
+
+  # ------------------------------------------------------------------------ #
+  # if you want to build from main branch, comment out the ZMK_ values below.
+  # ------------------------------------------------------------------------ #
+  ### example: build from a PR ID
+  ZMK_CHECKOUT: '1188' # sofle support by infused-kim
+  ZMK_FETCH: 'pull/1188/merge:1188' # TODO: this works, but is it correct ?
+  ### example: build from a specific commit on main
+  # ZMK_CHECKOUT: 'a82a0ec4969487a0f15cd417b215360465d746d5'
+  # ZMK_FETCH: 'main'
+
+tasks:
+  default:
+    desc: list tasks
+    cmds: [task --list]
+    silent: true

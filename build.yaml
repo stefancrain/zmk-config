@@ -1,0 +1,41 @@
+---
+include:
+  # Reset Firmware for Nice Nano
+  - board: nice_nano_v2
+    shield: settings_reset
+
+  # Sofle w/ Nice Nano + Nice View
+  - board: nice_nano_v2
+    shield: sofle_left nice_view_adapter nice_view
+  - board: nice_nano_v2
+    shield: sofle_right nice_view_adapter nice_view
+
+  # Sofle w/ Nice Nano
+  - board: nice_nano_v2
+    shield: sofle_left
+  - board: nice_nano_v2
+    shield: sofle_right
+
+  # Lily58 w/ Nice Nano + Nice View
+  - board: nice_nano_v2
+    shield: lily58_left nice_view_adapter nice_view
+  - board: nice_nano_v2
+    shield: lily58_right nice_view_adapter nice_view
+
+  # Lily58 w/ Nice Nano
+  - board: nice_nano_v2
+    shield: lily58_left
+  - board: nice_nano_v2
+    shield: lily58_right
+
+  # Corne w/ Nice Nano + Nice View
+  - board: nice_nano_v2
+    shield: corne_left nice_view_adapter nice_view
+  - board: nice_nano_v2
+    shield: corne_right nice_view_adapter nice_view
+
+  # Corne w/ Nice Nano
+  - board: nice_nano_v2
+    shield: corne_left
+  - board: nice_nano_v2
+    shield: corne_right
