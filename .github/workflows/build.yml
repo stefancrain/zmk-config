@@ -1,9 +1,15 @@
 ---
 on: [push, workflow_dispatch]
 
+env:
+  OWNER: ${{ github.repository_owner }}
+  REPO: ${{ github.event.repository.name }}
+  REF: ${{ github.ref_name }}
+  SHA: ${{ github.sha }}
+
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
     secrets: inherit
     with:
-      archive_name: ${{ github.event.repository.name }}-firmware-${{ github.ref_name }}-${{ github.sha }}
+      archive_name: zmk-${{ env.OWNER }}-${{ env.REPO }}-${{ env.REF }}-${{ env.SHA }}

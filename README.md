@@ -2,17 +2,16 @@
 
 This is a zmk config focused around the idea of switching branches quickly. As Pull requests take a long time to resolve, I wanted a way to test them quickly.
 
-
 ## How to use, with a local focus
 
 1. Fork this repo
 2. Clone the repo to your computer
 3. Setup ENV for Local Building
-   - `task west:init` :  Setup the build env locally, in docker
+   - `task west:init` : Setup the build env locally, in docker
    - `task west:convert2task` : Convert ZMK build.yaml to Tasks
 4. Edit the config and keymap files
 5. Build all of the firmware
-     - `task west:build:all`
+   - `task west:build:all`
 6. Deploy changes to keyboard, test
 7. Push your changes to github
 8. Download the firmware from the actions tab
